@@ -1,7 +1,7 @@
 # HackTheBox Valentine Writeup
 ## 10.10.10.79
 
-![](/images/1.png)
+![](./images/1.png)
 
 ## Enumeration
 
