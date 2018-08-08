@@ -24,10 +24,10 @@ dirb http://10.10.10.79/ /usr/share/dirb/wordlists/common.txt
 ```
 ![](./images/5.png)
 
-
 `/cgi-bin/` and `/server-status` are unauthorized
 
 `/dev` has 2 files, `notes` and `hype_key`
+
 ![](./images/6.png)
 ![](./images/7.png)
 ![](./images/8.png)
@@ -89,6 +89,7 @@ RUgZkbMQZNIIfzj1QuilRVBm/F76Y/YMrmnM9k/1xSGIskwCUQ+95CGHJE8MkhD3
 ## SSH
 
 ![](./images/12.png)
+
 we found ssh open port in the scan before, so trying to connect using user `hype`, since the file's name was `hype_key`:
 
 ![](./images/13.png)
@@ -99,7 +100,9 @@ Tried to use keywords from the `notes` file, but nothing worked... after being s
 ## HeartBleed
 
 ![](./images/14.jpg)
+
 Machine name is Valentine, `omg.jpg` has a heart which looks like the logo of the **HeartBleed** vulnerability, worth a look!
+
 ![](./images/15.png)
 
 ### Testing it..
@@ -108,6 +111,7 @@ Machine name is Valentine, `omg.jpg` has a heart which looks like the logo of th
 nmap -sV -p 443 --script=ssl-heartbleed 10.10.10.79
 ```
 ![](./images/16.png)
+
 **Vulnerable**
 
 ### Exploiting it..
@@ -134,6 +138,7 @@ decoding it:
 
 let's try it as the pass phrase for the ssh key :D
 ![](./images/20.png)
+
 ![](./images/21.png)
 
 **WE HAVE USER**
@@ -143,6 +148,7 @@ let's try it as the pass phrase for the ssh key :D
 let's bring in the `LinEnum` script from https://github.com/rebootuser/LinEnum/blob/master/LinEnum.sh
 I downloaded it, put it on my localhost and downloaded it on the box. And redirecting the output to my local machine for connection-related issues: I opened an nc listener on another terminal.
 ![](./images/22.png)
+
 ![](./images/23.png)
 
 We find an old linux kernel: `3.2.0`
