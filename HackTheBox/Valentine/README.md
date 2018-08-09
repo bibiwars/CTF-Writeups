@@ -32,7 +32,7 @@ dirb http://10.10.10.79/ /usr/share/dirb/wordlists/common.txt
 ![](./images/7.png)
 ![](./images/8.png)
 
-`/endode` and `/decode` are base64 encoder and decoder
+`/encode` and `/decode` are base64 encoder and decoder
 ![](./images/9.png)
 ![](./images/10.png)
 ![](./images/11.png)
